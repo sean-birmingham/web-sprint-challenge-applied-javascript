@@ -20,3 +20,43 @@
 // Add a listener for click events so that when a user clicks on a card, the headline of the article is logged to the console.
 //
 // Use your function to create a card for each of the articles, and append each card to the DOM.
+
+const cardsContainer = document.querySelector('.cards-container');
+
+function Card(article) {
+  const card = document.createElement('div');
+  const headline = document.createElement('div');
+  const author = document.createElement('div');
+  const imgContainer = document.createElement('div');
+  const authorsImg = document.createElement('img');
+  const authorsName = document.createElement('span');
+
+  headline.textContent = article.headline;
+  authorsImg.setAttribute('src', article.authorPhoto);
+  authorsName.textContent = article.authorName;
+
+  card.classList.add('card');
+  headline.classList.add('headline');
+  author.classList.add('author');
+  imgContainer.classList.add('img-container');
+
+  card.appendChild(headline);
+  card.appendChild(author);
+  author.appendChild(imgContainer);
+  imgContainer.appendChild(authorsImg);
+  author.appendChild(authorsName);
+
+  return card;
+}
+
+axios
+  .get('https://lambda-times-api.herokuapp.com/articles')
+  .then((response) => {
+    const keys = Object.keys(response.data.articles);
+
+    keys.forEach((key) =>
+      response.data.articles[key].forEach((article) =>
+        cardsContainer.appendChild(Card(article))
+      )
+    );
+  });
